@@ -1,151 +1,73 @@
-let step = 0;
-let formData = {};
+"use strict";
 
-function changeContent() {
-  const box = document.getElementById('contentBox');
-  box.innerHTML = ""; // clear the content
+const tontonGifs = [
+  "https://media.tenor.com/TUVAE2M_wz4AAAAi/chubby-tonton.gif",
+  "https://media.tenor.com/pZk_U5JVWzUAAAAi/tonton-friends-tonton.gif",
+  "https://media.tenor.com/Jkha__Yjf0oAAAAi/sad-depression.gif",
+  "https://media.tenor.com/U0OPHZokzkUAAAAi/what-seriously.gif",
+  "https://media.tenor.com/WKXMmSk3JJsAAAAi/chubby-tonton.gif",
+  "https://media.tenor.com/ZHWV13jliTAAAAAi/chubby-tonton.gif",
+];
 
-  // Add the new content here
-  if (step === 0) {
-    box.innerHTML = `
-      <h5 class="mb-1">anong pangalan ng crush mue?</h5>
-      <input type="text" class="form-control" id="crushName" required>
-      <button class="btn btn-primary" onclick="nextStep()">Next</button>
-    `;
-  } else if (step === 1) {
-    box.innerHTML = `
-      <h5 class="mb-4">Gender?</h5>
-      <select class="form-select mb-4" id="crushGender" required>
-        <option value="">Select Gender</option>
-        <option>bading</option>
-        <option>Male</option>
-      </select>
-      <button class="btn btn-primary" onclick="nextStep()">Next</button>
-    `;
-  } else if (step === 2) {
-    box.innerHTML = `
-      <h5 class="mb-4">Callsign naten?</h5>
-      <select class="form-select mb-4" id="crushStatus" required>
-        <option value="">Select Status</option>
-        <option> crushiecakeszz</option>
-        <option>S babycakeszz (baby)</option>
-        <option>haii crush HAHHAHA</option>
-      </select>
-      <button class="btn btn-primary" onclick="nextStep()">Next</button>
-    `;
-  } else if (step === 3) {
-    box.innerHTML = `
-      <h5 class="mb-4">Upload his/her photo</h5>
-      <input class="form-control mb-4" type="file" id="crushPicture" accept="image/*" required onchange="previewImage()">
-      <div id="imagePreview" class="mt-3 mb-3"></div>
-      <button class="btn btn-primary" onclick="nextStep()">Next</button>
-    `;
-  } else if (step === 4) {
-    box.innerHTML = `
-      <h5 class="mb-4">mahal mo ba ako kahit bading ako??</h5>
-      <div class="mb-4">
-        <button class="btn btn-outline-success" onclick="setLove('Yes')">Yes</button>
-        <button class="btn btn-outline-danger" onclick="setLove('No')">No</button>
-      </div>
-    `;
-  }else if (step === 5) {
-        const imageSrc = formData.picture ? formData.picture : ''; // Use uploaded picture if available
-      
-        box.innerHTML = `
-          <h5 class="mb-4">miss mo nanaman ako ah!</h5>
-          <div class="chat-container">
-            <!-- User's message bubble -->
-            <div class="user-message">
-              <div class="message-bubble user-bubble">
-                <p>I love you!</p>
-              </div>
-            </div>
-            <!-- Crush's reply with profile pic and name -->
-            <div class="crush-message">
-              <div class="crush-profile-pic">
-                <img src="${imageSrc}" alt="Crush's Profile" class="profile-pic">
-              </div>
-              <div class="crush-message-content">
-                <span class="crush-name">${formData.name}</span>
-                <div class="message-bubble crush-bubble">
-                  <p>I love you too Ira ko</p>
-                </div>
-              </div>
-            </div>
-          </div>
-          <p class="mt-3">i miss you Ira ko >_</p>
-        `;
-    }
-    
-      
-  
-  
+const title = document.querySelector(".title");
+const btnContainer = document.querySelector(".buttons");
+const yesBtn = document.querySelector(".btn-yes");
+const noBtn = document.querySelector(".btn-no");
+const img = document.querySelector(".img");
 
-  // Add fade-in effect
-  box.classList.remove('fade-in'); // reset the animation
-  void box.offsetWidth; // trigger reflow
-  box.classList.add('fade-in'); // apply fade-in
-}
+const MAX_IMAGES = 5;
+let play = true;
+let noCount = 0;
+let noButtonSize = 1;
+let yesButtonSize = 1;
 
-function nextStep() {
-  if (step === 0) {
-    formData.name = document.getElementById('crushName').value;
-    if (!formData.name) return alert("Please enter the name!");
-  } else if (step === 1) {
-    formData.gender = document.getElementById('crushGender').value;
-    if (!formData.gender) return alert("Please select gender!");
-  } else if (step === 2) {
-    formData.status = document.getElementById('crushStatus').value;
-    if (!formData.status) return alert("Please select status!");
-  } else if (step === 3) {
-    const fileInput = document.getElementById('crushPicture');
-    if (fileInput.files.length === 0) return alert("Please upload a picture!");
+yesBtn.addEventListener("click", () => {
+  title.innerHTML = "yayy!!maliligaw na nya ako kilig ako hihi 💗";
+  btnContainer.classList.add("hidden");
+  changeImage("yes");
+});
 
-    // Store the image as base64 data
-    const file = fileInput.files[0];
-    const reader = new FileReader();
-    
-    reader.onload = function(e) {
-      formData.picture = e.target.result; // Store base64 image data
-      step++;  // Proceed to the next step after the image is loaded
-      changeContent(); // Update content after processing
-    };
-
-    reader.readAsDataURL(file); // Convert image to base64
-    return; // Prevent the next step from triggering until the image is processed
-  } else if (step === 4) {
-    if (!formData.love) return alert("Please select if you love him/her!"); // Ensure love choice is selected
+noBtn.addEventListener("click", () => {
+  if (play) {
+    noCount++;
+    const imageIndex = Math.min(noCount, MAX_IMAGES);
+    changeImage(imageIndex);
+    resizeYesButton();
+    shrinkNoButton();
+    updateNoButtonText();
+    if (noCount === MAX_IMAGES) play = false;
   }
+});
 
-  step++;
-  changeContent();
+function resizeYesButton() {
+  yesButtonSize *= 1.2;
+  yesBtn.style.transform = `scale(${yesButtonSize})`;
 }
 
-function setLove(choice) {
-  formData.love = choice;
-  step++;
-  changeContent();
+function shrinkNoButton() {
+  noButtonSize *= 0.90;
+  noBtn.style.transform = `scale(${noButtonSize})`;
 }
 
-function previewImage() {
-  const fileInput = document.getElementById('crushPicture');
-  const previewContainer = document.getElementById('imagePreview');
-
-  const file = fileInput.files[0];
-  if (file) {
-    const reader = new FileReader();
-    
-    reader.onload = function(e) {
-      const img = document.createElement('img');
-      img.src = e.target.result;
-      img.classList.add('album-cover'); // Add the CSS class here
-      previewContainer.innerHTML = ""; // Clear previous preview
-      previewContainer.appendChild(img);
-    };
-
-    reader.readAsDataURL(file); // Convert image to base64
-  }
+function generateMessage(noCount) {
+  const messages = [
+    "No 😔",
+    "ako lang tuuhh 🥺",
+    "baby Ira  🥹",
+    "i love youuuu baby Ira koo 😭",
+    "mwaaaaaaaa yes pls? 💔",
+    "I'm gonna cry... 😭💔",
+  ];
+  return messages[Math.min(noCount, messages.length - 1)];
 }
 
-// Load first step when the page loads
-changeContent();
+function changeImage(image) {
+  img.src =
+    image === "yes"
+      ? "https://media.tenor.com/ACi1vdjNbpIAAAAi/%EC%9C%A0%ED%83%80-%ED%86%A4%ED%86%A4%ED%94%84%EB%A0%8C%EC%A6%88.gif"
+      : tontonGifs[image];
+}
+
+function updateNoButtonText() {
+  noBtn.innerHTML = generateMessage(noCount);
+}
