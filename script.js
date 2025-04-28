@@ -8,28 +8,28 @@ function changeContent() {
   // Add the new content here
   if (step === 0) {
     box.innerHTML = `
-      <h5 class="mb-1">anong pangalan ng crush mue?</h5>
+      <h5 class="mb-1">NAME NG BABY MO?</h5>
       <input type="text" class="form-control" id="crushName" required>
       <button class="btn btn-primary" onclick="nextStep()">Next</button>
     `;
   } else if (step === 1) {
     box.innerHTML = `
-      <h5 class="mb-4">Gender?</h5>
+      <h5 class="mb-4">HANDA BA KAYONG AMUYIN AT BUNUNAT NG BUHOK ANG KILIKILI NG ISA'T ISA??'?'?</h5>
       <select class="form-select mb-4" id="crushGender" required>
-        <option value="">Select Gender</option>
-        <option>bading</option>
-        <option>Male</option>
+        <option value="">Select Choices</option>
+        <option>Syempre kahit magdamag pa yan!</option>
+        <option>Hindi baka may amoy!</option>
       </select>
       <button class="btn btn-primary" onclick="nextStep()">Next</button>
     `;
   } else if (step === 2) {
     box.innerHTML = `
-      <h5 class="mb-4">Callsign naten?</h5>
+      <h5 class="mb-4">what do you dislike/ayaw about me?</h5>
       <select class="form-select mb-4" id="crushStatus" required>
-        <option value="">Select Status</option>
-        <option> crushiecakeszz</option>
-        <option>S babycakeszz (baby)</option>
-        <option>haii crush HAHHAHA</option>
+        <option value="">Select Choices</option>
+        <option> mambabae</option>
+        <option>puro girls following list</option>
+        <option>chat mo nalang </option>
       </select>
       <button class="btn btn-primary" onclick="nextStep()">Next</button>
     `;
@@ -42,7 +42,7 @@ function changeContent() {
     `;
   } else if (step === 4) {
     box.innerHTML = `
-      <h5 class="mb-4">mahal mo ba ako kahit bading ako??</h5>
+      <h5 class="mb-4">MAMAHALIN NYO BA ANG ISA'T ISA KAHIT MAY BAKTOL ISA SAINYO?'?</h5>
       <div class="mb-4">
         <button class="btn btn-outline-success" onclick="setLove('Yes')">Yes</button>
         <button class="btn btn-outline-danger" onclick="setLove('No')">No</button>
@@ -52,7 +52,7 @@ function changeContent() {
         const imageSrc = formData.picture ? formData.picture : ''; // Use uploaded picture if available
       
         box.innerHTML = `
-          <h5 class="mb-4">miss mo nanaman ako ah!</h5>
+          <h5 class="mb-4">i miss you Ela!</h5>
           <div class="chat-container">
             <!-- User's message bubble -->
             <div class="user-message">
@@ -68,12 +68,12 @@ function changeContent() {
               <div class="crush-message-content">
                 <span class="crush-name">${formData.name}</span>
                 <div class="message-bubble crush-bubble">
-                  <p>I love you too Ira ko</p>
+                  <p>I love you too </p>
                 </div>
               </div>
             </div>
           </div>
-          <p class="mt-3">i miss you Ira ko >_</p>
+          <p class="mt-3">i miss you too Ben >_<</p>
         `;
     }
     
